@@ -7,6 +7,15 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+type LogMiddleware struct {
+	http.Handler
+}
+
+func (middleware *LogMiddleware) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	fmt.Println("receive request")
+	middleware.Handler.ServeHTTP(writer, request)
+}
+
 func main() {
 	router := httprouter.New()
 	router.PanicHandler = func(w http.ResponseWriter, r *http.Request, error interface{}) {
@@ -25,8 +34,10 @@ func main() {
 		fmt.Fprint(w, "Hello http router")
 	})
 
+	middleware := LogMiddleware{router}
+
 	server := http.Server{
-		Handler: router,
+		Handler: &middleware,
 		Addr:    "localhost:3000",
 	}
 
