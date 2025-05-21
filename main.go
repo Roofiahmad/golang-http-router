@@ -15,6 +15,11 @@ func main() {
 	router.NotFound = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Sorry, we can't find the page you looking for")
 	})
+
+	router.MethodNotAllowed = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "Sorry method is not allowed")
+	})
+
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		// panic("Opps, something went wrong!")
 		fmt.Fprint(w, "Hello http router")
